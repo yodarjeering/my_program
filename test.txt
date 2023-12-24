@@ -1,0 +1,144 @@
+Private Sub CommandButton1_Click()
+    ' ボタンがクリックされたとき、テキストボックスの値が有効な数値かどうかを判定して処理
+    'ShowTextBoxValue TextBox1
+    'ShowTextBoxValue TextBox2
+    'ShowTextBoxValue TextBox3
+    
+    Dim textValue1, textValue2, textValue3 As Integer
+    textValue1 = ShowTextBoxValue(TextBox1)
+    textValue2 = ShowTextBoxValue(TextBox2)
+    textValue3 = ShowTextBoxValue(TextBox3)
+    
+    'SetSlideShowSettingsWithRange textValue1, textValue2
+    
+End Sub
+
+Sub SetSlideShowSettingsWithRange(startSlide As Integer, endSlide As Integer)
+    ' スライドが存在するか確認
+    If startSlide >= 1 And startSlide <= ActivePresentation.Slides.Count And _
+       endSlide >= 1 And endSlide <= ActivePresentation.Slides.Count Then
+
+        ' スライドショー設定を変更する
+        With ActivePresentation.SlideShowSettings
+            ' 切り替えを自動に設定
+            .StartingSlide = startSlide
+            .EndingSlide = endSlide
+            .RangeType = ppShowSlideRange
+            .StartingSlide = startSlide
+            .EndingSlide = endSlide
+            ' スライド切り替え時間はスライドごとのタイミングに従うため、AdvanceModeは設定しない
+            ' ESCが押されるまで繰り返す
+            .LoopUntilStopped = msoTrue
+        End With
+
+        ' スライドショーを開始する
+        ActiveWindow.View.SlideShowView.Exit
+        ActivePresentation.SlideShowSettings.Run
+    Else
+        MsgBox "無効なスライド番号です。"
+    End If
+End Sub
+
+
+Private Function ShowTextBoxValue(textBox As MSForms.textBox)
+    ' テキストボックスの値が有効な数値かどうかを判定して処理
+    If IsNumeric(textBox.Value) Then
+        ' テキストボックスの値が数値の場合、対応するスライドのスライドショー設定を変更する
+        Dim slideNumber As Integer
+        slideNumber = CInt(textBox.Value)
+        
+        ' スライドが存在するか確認
+        If slideNumber >= 1 And slideNumber <= ActivePresentation.Slides.Count Then
+            ' スライドショー設定を変更する
+            SetSlideLooping slideNumber
+            ActivePresentation.Slides(slideNumber).SlideShowTransition.Hidden = msoFalse
+            'MsgBox "スライド " & slideNumber & " をスライドショーでループするように設定しました。"
+            ShowTextBoxValue = CDbl(textBox.Value)
+            
+        Else
+            MsgBox "無効なスライド番号です。"
+            ShowTextBoxValue = -1
+        End If
+    Else
+        MsgBox "テキストボックスの値は有効な数値ではありません。"
+    End If
+End Function
+
+Private Sub SetSlideLooping(slideNumber As Integer)
+    Dim AdvanceTime As Integer
+    AdvanceTime = 5
+
+    ' スライドショー設定を変更して指定されたスライドをループするようにする
+    ' スライドショー設定を変更する
+        With ActivePresentation.SlideShowSettings
+            ' 切り替えを自動に設定
+            .AdvanceMode = ppSlideShowUseSlideTimings
+            .RangeType = ppShowSlideRange
+            ' スライド切り替え時間を2秒に設定
+            '.AdvanceTime = 2
+            ' ESCが押されるまで繰り返す
+             .LoopUntilStopped = msoTrue
+            ' スライドショーの開始位置と終了位置を指定
+            ActivePresentation.Slides(slideNumber).SlideShowTransition.AdvanceTime = AdvanceTime
+            ActivePresentation.Slides(slideNumber).SlideShowTransition.AdvanceOnTime = msoTrue
+        End With
+End Sub
+
+Private Sub HideTextBoxValue(textBox As MSForms.textBox)
+    ' テキストボックスの値が有効な数値かどうかを判定して処理
+    If IsNumeric(textBox.Value) Then
+        ' テキストボックスの値が数値の場合、対応するスライドのページを非表示にする
+        Dim slideNumber As Integer
+        slideNumber = CInt(textBox.Value)
+        
+        ' スライドが存在するか確認
+        If slideNumber >= 1 And slideNumber <= ActivePresentation.Slides.Count Then
+            ' スライドを非表示にする
+            ActivePresentation.Slides(slideNumber).SlideShowTransition.Hidden = msoTrue
+            MsgBox "スライド " & slideNumber & " を非表示にしました。"
+        Else
+            MsgBox "無効なスライド番号です。"
+        End If
+    Else
+        MsgBox "テキストボックスの値は有効な数値ではありません。"
+    End If
+End Sub
+
+Sub SetSlideShowSettings(slideNumber As Integer)
+    ' スライドが存在するか確認
+    If slideNumber >= 1 And slideNumber <= ActivePresentation.Slides.Count Then
+        ' スライドショー設定を変更する
+        With ActivePresentation.SlideShowSettings
+            ' 切り替えを自動に設定
+            .AdvanceMode = ppSlideShowUseSlideTimings
+            ' スライド切り替え時間を2秒に設定
+            '.AdvanceTime = 2
+            ' ESCが押されるまで繰り返す
+            .LoopUntilEsc = msoTrue
+            ' スライドショーの開始位置と終了位置を指定
+            .StartingSlide = slideNumber
+            .EndingSlide = slideNumber
+        End With
+
+        ' スライドショーを開始する
+        ActivePresentation.SlideShowSettings.Run
+    Else
+        MsgBox "無効なスライド番号です。"
+    End If
+End Sub
+
+
+Private Sub CommandButton2_Click()
+    ' ボタンがクリックされたとき、テキストボックスの値が有効な数値かどうかを判定して処理
+    HideTextBoxValue TextBox1
+    HideTextBoxValue TextBox2
+    HideTextBoxValue TextBox3
+
+End Sub
+
+Private Sub UserForm_Initialize()
+    ' ユーザーフォームが初期化されたときの処理
+    ' 各テキストボックスの初期テキストを設定
+    TextBox1.Value = "1"
+End Sub
+

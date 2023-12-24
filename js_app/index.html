@@ -1,0 +1,190 @@
+<!-- ------------- ドラッグ&ドロップ -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>ファイルのドラッグ&ドロップ</title>
+    <script>
+        function handleFileSelect(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            var output = [];
+            for (var i = 0; i < files.length; i++) {
+                output.push('<li>', files[i].name, '</li>');
+            }
+            document.getElementById('fileList').innerHTML = '<ul>' + output.join('') + '</ul>';
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+    </script>
+</head>
+<body>
+    <div id="drop_zone" ondrop="handleFileSelect(event)" ondragover="handleDragOver(event)">
+        <p>ここにファイルをドラッグ&ドロップしてください。</p>
+    </div>
+    <output id="fileList"></output>
+</body>
+</html> -->
+
+<!-- エクセル読み込み -->
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excelファイル読み込み</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script>
+        function handleFile(e) {
+            var files = e.target.files;
+            var f = files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var data = e.target.result;
+                var workbook = XLSX.read(data, { type: 'binary' });
+                var sheet_name_list = workbook.SheetNames;
+                sheet_name_list.forEach(function(y) {
+                    var worksheet = workbook.Sheets[y];
+                    for (z in worksheet) {
+                        if(z[0] === '!') continue;
+                        console.log(y + "!" + z + "=" + JSON.stringify(worksheet[z].v));
+                    }
+                });
+            };
+            reader.readAsBinaryString(f);
+        }
+    </script>
+</head>
+<body>
+    <input type="file" id="file" onchange="handleFile(event)">
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSVファイル読み込み</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script>
+        function handleFileCsv(e) {
+            var files = e.target.files;
+            var f = files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var data = e.target.result;
+                var lines = data.split('\n');
+                var csvData = [];
+
+
+
+                lines.forEach(function(line, index) {
+                    var columns = line.split(',');
+
+                    
+                    if (index === 0) {
+                        // 1行目は列名（ヘッダー）
+                        csvData.push(columns);
+                        
+                    } else {
+                        csvData.push({ '行名': index - 1, 'データ': columns });
+                    }
+                });
+
+                // 行名と列名を表示
+                for (var i = 0; i < csvData.length; i++) {
+                    if (Array.isArray(csvData[i])) {
+                        console.log('列名: ' + csvData[0][0]);
+                        console.log(i)
+                //  ---------------------------------
+                // csvData[0][col1]で1列目のcolname取得
+                
+
+
+                        // var separatedData = csvData.split(',');
+                        // if (typeof csvData[0] === 'string') { // 文字列であることを確認
+                        //     var separatedData = csvData[0].split(',');
+                        //     var variable1 = separatedData[0];
+                        //     var variable2 = separatedData[1];
+                        
+                        //     var splitted = csvData[0].split(',');
+                        //     console.log(variable1)}
+
+                        // var dummy = 0;
+                    } else {
+                        // console.log('行名: ' + csvData[i]['行名'] + ', 列データ: ' + csvData[i]['データ']);
+                        var dummy = 0;
+
+                    }
+                }
+            };
+            reader.readAsText(f);
+        }
+        
+
+        function handleFileXlsx(e) {
+            var files = e.target.files;
+            var f = files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var data = e.target.result;
+                var workbook = XLSX.read(data, { type: 'binary' });
+                var sheet_name_list = workbook.SheetNames;
+                sheet_name_list.forEach(function(y) {
+                    var worksheet = workbook.Sheets[y];
+                    for (z in worksheet) {
+                        if(z[0] === '!') continue;
+                        console.log(y + "!" + z + "=" + JSON.stringify(worksheet[z].v));
+                    }
+                });
+            };
+            reader.readAsBinaryString(f);
+        }
+    </script>
+</head>
+<body>
+    <p>csvファイルを読み込みます</p>
+    <input type="file" id="file" accept=".csv" onchange="handleFileCsv(event)">
+    <br>
+    <br>
+
+    <p>xlsxファイルを読み込みます</p>
+    <input type="file" id="file" accept=".xlsx" onchange="handleFileXlsx(event)">
+</body>
+</html>
+
+<!-- 
+// ここでは、データを読み込み、IDに基づいてデータをマージするJavaScriptの一部を示しています
+// このコードは実際のエクセルファイルの操作ではなく、単なる例示です
+
+// サンプルデータを仮定します
+var excelData = {
+    1: { name: 'John', age: 25, location: 'New York' },
+    2: { name: 'Jane', age: 30, location: 'Paris' },
+    // ...他のデータ
+};
+
+// 重複をチェックしてマージする関数
+function mergeData(existingData, newData) {
+    for (var key in newData) {
+        if (existingData.hasOwnProperty(key)) {
+            // IDが重複する場合、データをマージする
+            // ここでデータを必要に応じて更新します
+            // 例: existingData[key].age = newData[key].age;
+            // 他のプロパティにも同様に対処します
+        } else {
+            // IDが新しい場合、新たなデータを追加する
+            existingData[key] = newData[key];
+        }
+    }
+}
+
+// サンプルデータをマージする
+var newDataFromExcel = {
+    1: { name: 'John', age: 28 }, // 重複するID
+    3: { name: 'Maria', age: 35, location: 'London' } // 新しいID
+};
+
+mergeData(excelData, newDataFromExcel);
+console.log(excelData); // マージされたデータ -->

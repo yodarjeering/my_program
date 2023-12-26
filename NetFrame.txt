@@ -1,0 +1,10 @@
+mkdir $HOME\dotnet
+tar -zxf dotnet-sdk-8.0.100-win-x64.exe -C $HOME\dotnet
+
+or
+
+mkdir $HOME\dotnet; tar -zxf dotnet-sdk-8.0.100-win-x64.exe -C $HOME\dotnet
+
+
+$env:DOTNET_ROOT = "$env:USERPROFILE\dotnet"
+$env:PATH += ";$env:USERPROFILE\dotnet"

@@ -3,10 +3,13 @@ Function my_lookup(searchRange As Range, valueToFind As String) As Variant
     Dim resultList As New Collection
     
     ' 検索範囲をループして部分一致で値を検索
+    ' ここでフィルターで隠されたセルを無視する
     For Each cell In searchRange
-        If InStr(1, cell.Value, valueToFind) > 0 Then
-            ' 部分一致した値をコレクションに追加
-            resultList.Add cell.Value
+        If Not cell.EntireRow.Hidden Then ' 行が隠れていない場合にのみ実行
+            If InStr(1, cell.Value, valueToFind) > 0 Then
+                ' 部分一致した値をコレクションに追加
+                resultList.Add cell.Value
+            End If
         End If
     Next cell
     

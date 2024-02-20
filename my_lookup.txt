@@ -1,0 +1,26 @@
+Function my_lookup(searchRange As Range, valueToFind As String) As Variant
+    Dim cell As Range
+    Dim resultList As New Collection
+    
+    ' 検索範囲をループして部分一致で値を検索
+    For Each cell In searchRange
+        If InStr(1, cell.Value, valueToFind) > 0 Then
+            ' 部分一致した値をコレクションに追加
+            resultList.Add cell.Value
+        End If
+    Next cell
+    
+    ' コレクションを配列に変換
+    Dim resultArray() As Variant
+    If resultList.Count > 0 Then
+        ReDim resultArray(1 To resultList.Count)
+        Dim i As Integer
+        For i = 1 To resultList.Count
+            resultArray(i) = resultList(i)
+        Next i
+        my_lookup = resultArray
+    Else
+        ' 見つからない場合は空の配列を返す
+        my_lookup = Array()
+    End If
+End Function

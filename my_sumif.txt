@@ -1,0 +1,27 @@
+Function my_sumif(searchRange1 As Range, value1 As String, value2 As String, searchRange2 As Range) As Variant
+    Dim total As Double
+    Dim cell As Range
+    Dim i As Long
+    
+    total = 0 ' 合計値の初期化
+    
+    ' 検索範囲1と検索範囲2の行数が一致することを確認
+    If searchRange1.Rows.Count <> searchRange2.Rows.Count Then
+        my_sumif = CVErr(xlErrValue)
+        Exit Function
+    End If
+    
+    ' 検索範囲1をループして値を検索
+    For i = 1 To searchRange1.Rows.Count
+        If InStr(1, searchRange1.Cells(i, 1).Value, value1) > 0 And _
+           InStr(1, searchRange1.Cells(i, 1).Value, value2) > 0 Then
+            ' 条件に一致する場合、検索範囲2の対応するセルの値を加算
+            total = total + searchRange2.Cells(i, 1).Value
+  
+
+        End If
+    Next i
+    
+    ' 合計値を返却
+    my_sumif = total
+End Function

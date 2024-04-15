@@ -39,3 +39,27 @@ function countGridResponses() {
   // 集計結果をログに出力
   console.log(responseData);
 }
+
+
+function disableOptions() {
+  var formId = 'YOUR_FORM_ID';
+  var form = FormApp.openById(formId);
+  var items = form.getItems(FormApp.ItemType.MULTIPLE_CHOICE);
+
+  items.forEach(function(item) {
+    if (item.getTitle() === "質問のタイトル") {
+      var mcItem = item.asMultipleChoiceItem();
+      var choices = mcItem.getChoices();
+      var newChoices = choices.map(function(choice) {
+        if (choice.getValue() === "選択肢A") {
+          // 選択肢に " - 利用不可" を追加
+          return choice.getValue() + " - 利用不可";
+        }
+        return choice;
+      });
+
+      // 更新した選択肢で質問を更新
+      mcItem.setChoices(newChoices);
+    }
+  });
+}

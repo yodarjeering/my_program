@@ -1,0 +1,14 @@
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+<script type="text/javascript" src="/MathJax.js">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+    "HTML-CSS": {
+      availableFonts:[],
+    }
+  });
+</script>
+
+\[
+F(s) = \int_0^\infty f(t)e^{-st}\mathrm{d}t
+\]
